@@ -16,6 +16,14 @@ public class Checker{
         this.radius = radius;
     }
 
+    public void setRow(int row) {
+        this.row = row;
+    }
+
+    public void setCol(int col) {
+        this.col = col;
+    }
+
     public  Checker(int row, int col){
         this.row = row;
         this.col = col;
@@ -60,4 +68,11 @@ public class Checker{
     public void setMovingCoords(Point movingCoords) {
         this.movingCoords = movingCoords;
     }
+
+    public  void move(int row, int col){
+        this.row = row;
+        this.col = col;
+    }
+
+
 }
