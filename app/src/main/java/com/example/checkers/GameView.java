@@ -3,6 +3,7 @@ package com.example.checkers;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
@@ -29,8 +30,10 @@ public class GameView  extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        drawCanvasStyles(canvas);
         FieldDrawer.Draw(game.getField(),canvas);
         drawCheckers(canvas);
+        drawEatenCheckers(canvas);
     }
 
     private  void initializeGame(Context context){
@@ -56,12 +59,10 @@ public class GameView  extends View {
     }
 
     private  void handleMoveChecker(MotionEvent event){
-        int x = (int)event.getX();
-        int y = (int)event.getY();
         if(game.getChoosedChecker() == null){
             game.setChoosedChecker(getCheckerByEvent(event));
             if(game.getChoosedChecker() != null){
-                game.getChoosedChecker().setMovingCoords(new Point((int)event.getX(), (int)event.getY()));
+                updateChoosedCheckerCoords(event);
             }
         }
         else{
@@ -72,8 +73,32 @@ public class GameView  extends View {
     private  void handleEndMoveChecker(MotionEvent event){
         int x = (int)event.getX();
         int y = (int)event.getY();
-        if(game.tryMove(x ,y)){
-            game.nextStep();
+        updateChoosedCheckerCoords(event);
+        if(game.getChoosedChecker() != null && game.IsCanEat(game.getNextStepPlayerNum())){
+            Checker checkerAfterMove = game.getField().getCheckerByCoords(x, y);
+            if(game.IsEnableEatMove(checkerAfterMove)){
+                if(game.tryMove(x ,y)){
+                    if(!game.IsCanCheckerEat(game.getChoosedChecker(), game.getNextStepPlayerNum())){
+                        game.cleanChoosedMove();
+                        game.nextStep();
+                    }
+                }
+            }
+            else{
+                game.cleanChoosedMove();
+            }
+        }
+        else{
+            if(game.tryMove(x ,y)){
+                game.cleanChoosedMove();
+                game.nextStep();
+            }
+        }
+    }
+
+    private  void updateChoosedCheckerCoords(MotionEvent event){
+        if(game.getChoosedChecker() != null){
+            game.getChoosedChecker().setMovingCoords(new Point((int)event.getX(), (int)event.getY()));
         }
     }
 
@@ -83,14 +108,14 @@ public class GameView  extends View {
         Checker checker= null;
         Checker checkerToFind = game.getField().getCheckerByCoords(x, y);
         if(game.getField().IsFieldClick(x, y)){
-          checker = game.findChecker(checkerToFind);
+          checker = game.findChecker(checkerToFind, game.getNextStepPlayerNum());
         }
         return  checker;
     }
 
 
     private PlayingField  initializePlayingField(){
-        int headerHeight = 300;
+        int headerHeight = 150;
         int sideSize = (int)(this.screenWidth * 0.8);
         int top = ((this.screenHeight - sideSize) / 2) - headerHeight;
         int left = (this.screenWidth - sideSize) / 2;
@@ -108,20 +133,41 @@ public class GameView  extends View {
             }
             else {
                 CheckerDrawer.DrawByCoords(checker.getMovingCoords().x, checker.getMovingCoords().y,
-                        checker, canvas, (byte)0);
+                        checker.getRadius(), canvas, (byte)0);
             }
 
         }
-        for(int i = 0; i < game.getSecondPlayerCheckers().size(); i++){
+        for(int i = 0; i < game.getSecondPlayerCheckers().size(); i++) {
             Checker checker = game.getSecondPlayerCheckers().get(i);
-            if(checker.getMovingCoords() == null){
-                CheckerDrawer.Draw(game.getField(), checker, canvas, (byte)1);
-            }
-            else {
+            if (checker.getMovingCoords() == null) {
+                CheckerDrawer.Draw(game.getField(), checker, canvas, (byte) 1);
+            } else {
                 CheckerDrawer.DrawByCoords(checker.getMovingCoords().x, checker.getMovingCoords().y,
-                        checker, canvas, (byte)1);
+                        checker.getRadius(), canvas, (byte) 1);
             }
         }
+    }
+
+    private  void drawEatenCheckers(Canvas canvas){
+        if(game.getFirstPlayersCheckers().size() < game.getCountCheckers()){
+            CheckerDrawer.DrawEatenCheckers(game.getField(), game.getField().getCellSize()/2,
+                    game.getCountCheckers() - game.getFirstPlayersCheckers().size(),
+                    canvas, (byte)0);
+        }
+
+        if(game.getSecondPlayerCheckers().size() < game.getCountCheckers()){
+            CheckerDrawer.DrawEatenCheckers(game.getField(), game.getField().getCellSize()/2,
+                    game.getCountCheckers() - game.getSecondPlayerCheckers().size(),
+                    canvas, (byte)1);
+        }
+    }
+
+    private  void drawCanvasStyles(Canvas canvas){
+        Paint paint = new Paint();
+        paint.setStyle(Paint.Style.FILL);
+        int backgroundColor = getResources().getColor(R.color.background);
+        paint.setColor(backgroundColor);
+        canvas.drawPaint(paint);
     }
 
 

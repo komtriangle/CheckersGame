@@ -9,7 +9,17 @@ public class Game {
     private  ArrayList<Checker> secondPlayerCheckers;
     private  final  int fieldSize = 8;
     private  byte nextStepPlayerNum = 0;
+
+    public byte getNextStepPlayerNum() {
+        return nextStepPlayerNum;
+    }
+
     private  Checker choosedChecker;
+    private  final int countCheckers = 12;
+
+    public int getCountCheckers() {
+        return countCheckers;
+    }
 
     public Checker getChoosedChecker() {
         return choosedChecker;
@@ -83,8 +93,7 @@ public class Game {
             return  false;
         }
         //Проверка на то что место для шашки свободно
-        if (! IsPositionFree(firstPlayersCheckers, checkerWithNewPosition) ||
-        ! IsPositionFree(secondPlayerCheckers, checkerWithNewPosition)){
+        if (! IsPositionFree(checkerWithNewPosition)){
             return  false;
         }
 
@@ -116,30 +125,33 @@ public class Game {
 
     public  boolean tryMove(int x, int y){
         boolean isMoved = false;
-        Checker checker = findChecker(choosedChecker);
+        Checker checker = findChecker(choosedChecker, nextStepPlayerNum);
        if(checker != null){
-           if(!field.IsFieldClick(x, y)) {
-               if(checker != null){
-                   checker.setMovingCoords(null);
-               }
-           }
-           else {
+           if(field.IsFieldClick(x, y)) {
                Checker checkerAfterMove = field
                        .getCheckerByCoords(checker.getMovingCoords().x, checker.getMovingCoords().y);
                if(IsAllowedMove(checkerAfterMove.getRow(), checkerAfterMove.getCol())){
                    checker.move(checkerAfterMove.getRow(), checkerAfterMove.getCol());
                    isMoved = true;
                }
-               checker.setMovingCoords(null);
            }
+           checker.setMovingCoords(null);
        }
-        setChoosedChecker(null);
         return  isMoved;
     }
 
-     public Checker findChecker(Checker checker){
+    public  void cleanChoosedMove(){
+        Checker checker = findChecker(choosedChecker, nextStepPlayerNum);
+        if(checker != null){
+            checker.setMovingCoords(null);
+        }
+        setChoosedChecker(null);
+    }
+
+
+     public Checker findChecker(Checker checker, byte side){
         Checker findedChecker = null;
-        if(nextStepPlayerNum == 0){
+        if(side == 0){
             findedChecker = findChecker(firstPlayersCheckers, checker);
         }
         else{
@@ -162,13 +174,13 @@ public class Game {
 
     private  boolean IsOneCellMove(Checker checkerAfterMove){
         if((Math.abs(choosedChecker.getRow() - checkerAfterMove.getRow()) == 1)
-                || (Math.abs(choosedChecker.getCol() - checkerAfterMove.getCol())== 1)){
+                && (Math.abs(choosedChecker.getCol() - checkerAfterMove.getCol())== 1)){
             return  true;
         }
         return  false;
     }
 
-    private  boolean IsEnableEatMove(Checker checkerAfterMove){
+    public   boolean IsEnableEatMove(Checker checkerAfterMove){
         if((Math.abs(choosedChecker.getRow() - checkerAfterMove.getRow()) != 2)
                 || (Math.abs(choosedChecker.getCol() - checkerAfterMove.getCol())!= 2)){
             return  false;
@@ -193,6 +205,11 @@ public class Game {
         int rowCheckerToEat = Math.max(choosedChecker.getRow(), checkerAfterMove.getRow()) - 1;
         Checker checkerToEat = new Checker(rowCheckerToEat, colCheckerToEat);
         return  checkerToEat;
+    }
+
+    private  boolean IsPositionFree(Checker checkerToCheck){
+        return IsPositionFree(firstPlayersCheckers, checkerToCheck) &&
+                 IsPositionFree(secondPlayerCheckers, checkerToCheck);
     }
 
 
@@ -222,5 +239,68 @@ public class Game {
                 break;
             }
         }
+    }
+
+    public  boolean IsCanEat(byte side){
+        ArrayList<Checker> checkers;
+        if(side == 0){
+            checkers = firstPlayersCheckers;
+        }
+        else{
+            checkers = secondPlayerCheckers;
+        }
+        for(int i = 0; i< checkers.size(); i++){
+            if(IsCanEat(checkers.get(i), side)){
+                return  true;
+            }
+        }
+        return  false;
+    }
+
+    public  boolean IsCanEat(Checker checker, byte side){
+        int direction ;
+        if(side == 0){
+            direction = 1;
+        }
+        else{
+            direction = -1;
+        }
+        byte oponnentSide = getOpponentSide(side);
+        Checker checkerToEat = null;
+        if(checker.getRow() + direction < fieldSize-1 && checker.getRow()+direction > 2){
+            if(checker.getCol() > 2){
+                Checker checkerToFind = new Checker(checker.getRow() + direction, checker.getCol()-1);
+                checkerToEat = findChecker(checkerToFind, oponnentSide);
+                Checker checkerNewPlace = new Checker(checker.getRow()+2*direction, checker.getCol()-2);
+                if(checkerToEat != null && IsPositionFree(checkerNewPlace)){
+                    return  true;
+                }
+            }
+
+            if(checker.getCol() < fieldSize-1){
+                Checker checkerToFind = new Checker(checker.getRow() + direction, checker.getCol()+1);
+                checkerToEat = findChecker(checkerToFind, oponnentSide);
+
+                Checker checkerNewPlace = new Checker(checker.getRow()+2*direction, checker.getCol()+2);
+                if(checkerToEat != null && IsPositionFree(checkerNewPlace)){
+                    return  true;
+                }
+            }
+
+        }
+        return  false;
+
+    }
+
+    public  boolean IsCanCheckerEat(Checker checker, byte side){
+        if(checker == null){
+            return  false;
+        }
+        Checker checkerToCheck = findChecker(checker, side);
+        return  checkerToCheck != null && IsCanEat(checkerToCheck, side);
+    }
+
+    private  byte getOpponentSide(byte side){
+        return  (byte)((side+1)%2);
     }
 }

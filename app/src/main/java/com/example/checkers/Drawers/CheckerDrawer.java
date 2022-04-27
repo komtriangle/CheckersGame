@@ -13,10 +13,10 @@ public class CheckerDrawer {
         int cellSize = field.getCellSize();
         int x = field.getLeft() + (int)(cellSize * (checker.getCol() - 0.5));
         int y =  field.getTop() + (int)(cellSize * (checker.getRow() - 0.5));
-        DrawByCoords(x, y, checker, canvas, side);
+        DrawByCoords(x, y, checker.getRadius(), canvas, side);
     }
 
-    public  static  void DrawByCoords(int x, int y, Checker checker, Canvas canvas, byte side){
+    public  static  void DrawByCoords(int x, int y, int radius, Canvas canvas, byte side){
         Paint paint = new Paint();
         paint.setStyle(Paint.Style.FILL);
         if (side == 0){
@@ -25,6 +25,31 @@ public class CheckerDrawer {
         else{
             paint.setColor(Color.BLACK);
         }
-        canvas.drawCircle(x, y, checker.getRadius(), paint);
+        canvas.drawCircle(x, y, radius, paint);
     }
+
+    public  static void DrawEatenCheckers(PlayingField field, int checkersRadius, int count, Canvas canvas, byte side){
+        if(side == 0){
+            int top = field.getTop() - 3*(field.getSideSize() / field.getCountCells());
+            int left = field.getLeft();
+            for(int i =0; i< count; i++){
+                int rowNum = 1 + (int)Math.floor((checkersRadius + i*field.getCellSize())/field.getSideSize());
+                DrawByCoords(left + (checkersRadius + i*field.getCellSize())%field.getSideSize(),
+                        top + checkersRadius*2*rowNum,
+                        checkersRadius, canvas, side);
+            }
+        }
+        else{
+            int top = field.getTop() + field.getSideSize() + (field.getSideSize() / field.getCountCells());
+            int left = field.getLeft();
+            for(int i =0; i< count; i++){
+                int rowNum = 1 + (int)Math.floor((checkersRadius + i*field.getCellSize())/field.getSideSize());
+                DrawByCoords(left + (checkersRadius + i*field.getCellSize()) % field.getSideSize(),
+                        top + checkersRadius*2*rowNum,
+                        checkersRadius, canvas, side);
+            }
+
+        }
+    }
+
 }
