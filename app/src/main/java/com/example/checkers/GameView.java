@@ -78,8 +78,11 @@ public class GameView  extends View {
             Checker checkerAfterMove = game.getField().getCheckerByCoords(x, y);
             if(game.IsEnableEatMove(checkerAfterMove)){
                 if(game.tryMove(x ,y)){
+                    System.out.println("Row:" + game.getChoosedChecker().getRow());
+                    System.out.println("Col: " + game.getChoosedChecker().getCol());
                     if(!game.IsCanCheckerEat(game.getChoosedChecker(), game.getNextStepPlayerNum())){
                         game.cleanChoosedMove();
+                        System.out.println("Can't eta more");
                         game.nextStep();
                     }
                 }
@@ -90,9 +93,9 @@ public class GameView  extends View {
         }
         else{
             if(game.tryMove(x ,y)){
-                game.cleanChoosedMove();
                 game.nextStep();
             }
+            game.cleanChoosedMove();
         }
     }
 
