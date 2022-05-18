@@ -9,6 +9,9 @@ import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.checkers.Activities.CheckersGameActivity;
 import com.example.checkers.Drawers.CheckerDrawer;
 import com.example.checkers.Drawers.FieldDrawer;
 
@@ -19,9 +22,11 @@ public class GameView  extends View {
 
     private  int screenWidth;
     private  int screenHeight;
+    private  Context context;
     private  Game game;
-    public GameView(Context context) {
+    public GameView(Context context, String player1Name, String player2Name) {
         super(context);
+        this.context = context;
         initializeGame(context);
         PlayingField field =  initializePlayingField();
         this.game = new Game(field);
@@ -29,6 +34,7 @@ public class GameView  extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
+
         super.onDraw(canvas);
         drawCanvasStyles(canvas);
         FieldDrawer.Draw(game.getField(),canvas);
@@ -50,7 +56,6 @@ public class GameView  extends View {
             handleMoveChecker(event);
         }
         else if(event.getAction() == MotionEvent.ACTION_UP){
-            System.out.println("UP");
             handleEndMoveChecker(event);
         }
 
@@ -78,11 +83,8 @@ public class GameView  extends View {
             Checker checkerAfterMove = game.getField().getCheckerByCoords(x, y);
             if(game.IsEnableEatMove(checkerAfterMove)){
                 if(game.tryMove(x ,y)){
-                    System.out.println("Row:" + game.getChoosedChecker().getRow());
-                    System.out.println("Col: " + game.getChoosedChecker().getCol());
                     if(!game.IsCanCheckerEat(game.getChoosedChecker(), game.getNextStepPlayerNum())){
                         game.cleanChoosedMove();
-                        System.out.println("Can't eta more");
                         game.nextStep();
                     }
                 }
@@ -97,6 +99,7 @@ public class GameView  extends View {
             }
             game.cleanChoosedMove();
         }
+        checkerGameEnd();
     }
 
     private  void updateChoosedCheckerCoords(MotionEvent event){
@@ -118,9 +121,9 @@ public class GameView  extends View {
 
 
     private PlayingField  initializePlayingField(){
-        int headerHeight = 150;
-        int sideSize = (int)(this.screenWidth * 0.8);
-        int top = ((this.screenHeight - sideSize) / 2) - headerHeight;
+        int headerHeight = 0;
+        int sideSize = (int)(this.screenWidth * 0.7);
+        int top = (int)((this.screenHeight*0.7 - sideSize) / 2) - headerHeight;
         int left = (this.screenWidth - sideSize) / 2;
         PlayingField field = new PlayingField(sideSize, top, left);
         return  field;
@@ -171,6 +174,13 @@ public class GameView  extends View {
         int backgroundColor = getResources().getColor(R.color.background);
         paint.setColor(backgroundColor);
         canvas.drawPaint(paint);
+    }
+
+    private  void checkerGameEnd(){
+        if(game.IsGameEnded()){
+            byte winner = game.getWinner();
+            ((CheckersGameActivity)context).showEndGameDialog(winner);
+        }
     }
 
 

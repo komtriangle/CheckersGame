@@ -39,8 +39,8 @@ public class Game {
     }
 
     public Game(PlayingField field){
-        firstPlayersCheckers = new ArrayList<Checker>();
-        secondPlayerCheckers = new ArrayList<Checker>();
+        firstPlayersCheckers = new ArrayList<>();
+        secondPlayerCheckers = new ArrayList<>();
         this.field = field;
         initializeCheckers();
     }
@@ -302,5 +302,19 @@ public class Game {
 
     private  byte getOpponentSide(byte side){
         return  (byte)((side+1)%2);
+    }
+
+    public  boolean IsGameEnded(){
+        return  firstPlayersCheckers.size() == 0 || secondPlayerCheckers.size() == 0;
+    }
+
+    public  byte getWinner(){
+        byte winner = -1;
+        if(firstPlayersCheckers.size() == 0){
+            return 0;
+        }
+        else{
+            return  1;
+        }
     }
 }
