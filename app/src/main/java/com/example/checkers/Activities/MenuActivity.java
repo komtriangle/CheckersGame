@@ -1,28 +1,28 @@
 package com.example.checkers.Activities;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.example.checkers.ActivitiesRouter;
+import com.example.checkers.Models.User;
 import com.example.checkers.R;
 
-public class MenuActivity extends AppCompatActivity  implements View.OnClickListener{
+public class MenuActivity extends ActivityBase  implements View.OnClickListener{
 
+    private  User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
         handleClicks();
+        user = getUserSharedPreference();
+        prepareAuthButton();
     }
 
     @Override
@@ -31,37 +31,36 @@ public class MenuActivity extends AppCompatActivity  implements View.OnClickList
             case R.id.newGame:
                 newGame();
                 break;
-            case R.id.logOut:
-                LogOut();
+            case R.id.gamesHistory:
+                gameHistory();
+                break;
+            case R.id.authButton:
+                ToAuth();
             default:
                 break;
         }
     }
 
     private  void newGame(){
-        //ActivitiesRouter.moveToGame(this);
         ChoosePlayerNames();
-
-
     }
 
-    private  void LogOut(){
-        resetUserInSharedPreference();
+    private  void gameHistory(){
+        if(user != null){
+            ActivitiesRouter.moveToGameHistory(this);
+        }
+    }
+
+
+    private  void ToAuth(){
+        if(user != null){
+            resetUserInSharedPreference();
+        }
         ActivitiesRouter.moveToLogin(this);
     }
 
-    private  void resetUserInSharedPreference(){
-        SharedPreferences.Editor userShapeEditor = getUserSharedEditor();
-        userShapeEditor.remove("USER_NAME");
-        userShapeEditor.remove("ID");
-    }
 
-    private SharedPreferences.Editor getUserSharedEditor(){
-        String preferenceName = "USER_PREFERENCE";
-        SharedPreferences userSharedPreferences = getSharedPreferences(preferenceName, Context.MODE_PRIVATE);
-        SharedPreferences.Editor userShapeEditor = userSharedPreferences.edit();
-        return  userShapeEditor;
-    }
+
 
     private  void handleClicks(){
         Button newGame = (Button) findViewById(R.id.newGame);
@@ -70,7 +69,7 @@ public class MenuActivity extends AppCompatActivity  implements View.OnClickList
         Button gameHistory = (Button) findViewById(R.id.gamesHistory);
         gameHistory.setOnClickListener(this);
 
-        Button logOut = (Button) findViewById(R.id.logOut);
+        Button logOut = (Button) findViewById(R.id.authButton);
         logOut.setOnClickListener(this);
     }
 
@@ -117,6 +116,19 @@ public class MenuActivity extends AppCompatActivity  implements View.OnClickList
         if(player1Name != null && player2Name != null){
             ActivitiesRouter.moveToGame(this, player1Name, player2Name);
         }
+    }
+
+    private  void prepareAuthButton(){
+        if(user == null){
+            setButtonAuthText("Войти в аккаунт");
+        }
+        else{
+            setButtonAuthText("Выйти из аккаунта");
+        }
+    }
+    private  void setButtonAuthText(String text){
+        Button authButton = (Button)findViewById(R.id.authButton);
+        authButton.setText(text);
     }
 
 

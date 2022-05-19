@@ -179,7 +179,7 @@ public class GameView  extends View {
     private  void checkerGameEnd(){
         if(game.IsGameEnded()){
             byte winner = game.getWinner();
-            ((CheckersGameActivity)context).showEndGameDialog(winner);
+            ((CheckersGameActivity)context).endGame(winner);
         }
     }
 

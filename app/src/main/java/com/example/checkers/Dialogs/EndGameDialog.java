@@ -30,8 +30,8 @@ public class EndGameDialog extends DialogFragment {
         String button1String = "Перейти в меню";
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(title);  // заголовок
-        builder.setMessage(message); // сообщение
+        builder.setTitle(title);
+        builder.setMessage(message);
         builder.setPositiveButton(button1String, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 ActivitiesRouter.moveToMenu(activity);

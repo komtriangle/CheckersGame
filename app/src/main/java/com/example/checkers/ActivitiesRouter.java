@@ -6,6 +6,7 @@ import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.checkers.Activities.CheckersGameActivity;
+import com.example.checkers.Activities.GameHistoryActivity;
 import com.example.checkers.Activities.LoginActivity;
 import com.example.checkers.Activities.MenuActivity;
 import com.example.checkers.Activities.RegisterActivity;
@@ -34,6 +35,12 @@ public  class ActivitiesRouter {
     public  static  void moveToMenu(AppCompatActivity activity){
         Intent i;
         i = new Intent(activity, MenuActivity.class);
+        activity.startActivity(i);
+    }
+
+    public  static  void moveToGameHistory(AppCompatActivity activity){
+        Intent i;
+        i = new Intent(activity, GameHistoryActivity.class);
         activity.startActivity(i);
     }
 }

@@ -13,7 +13,7 @@ import com.example.checkers.ActivitiesRouter;
 import com.example.checkers.GameView;
 import com.example.checkers.Models.User;
 
-public class MainActivity extends AppCompatActivity  {
+public class MainActivity extends ActivityBase  {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,16 +32,5 @@ public class MainActivity extends AppCompatActivity  {
 
     }
 
-    private User getUserSharedPreference(){
-        User user = null;
-        String preferenceName = "USER_PREFERENCE";
-        SharedPreferences userSharedPreferences = getSharedPreferences(preferenceName, Context.MODE_PRIVATE);
-        if(userSharedPreferences.contains("USER_NAME") && userSharedPreferences.contains("ID")){
-            String userName = userSharedPreferences.getString("USER_NAME", "");
-            int id = userSharedPreferences.getInt("ID", -1);
-            user = new User(id, userName);
-        }
-        return  user;
 
-    }
 }

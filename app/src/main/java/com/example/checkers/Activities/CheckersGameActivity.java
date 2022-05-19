@@ -9,15 +9,19 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.checkers.API.GameAPI;
 import com.example.checkers.ActivitiesRouter;
 import com.example.checkers.Dialogs.EndGameDialog;
 import com.example.checkers.GameView;
+import com.example.checkers.Models.GameResult;
+import com.example.checkers.Models.User;
 import com.example.checkers.R;
 
-public class CheckersGameActivity extends AppCompatActivity implements View.OnClickListener{
+public class CheckersGameActivity extends ActivityBase implements View.OnClickListener{
 
     private  String player1Name;
     private  String player2Name;
+    private GameAPI gameAPI;
     LinearLayout gameLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,21 +32,32 @@ public class CheckersGameActivity extends AppCompatActivity implements View.OnCl
         GameView gameView = new GameView(this, player1Name, player2Name);
         gameLayout.addView(gameView);
         handleClicks();
+        gameAPI = new GameAPI("http://213.178.155.140:4200", null);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.endFromGame:
-                endGame();
+                exitFromGame();
                 break;
             default:
                 break;
         }
     }
 
-    private  void endGame(){
+    private  void exitFromGame(){
         ActivitiesRouter.moveToMenu(this);
+    }
+
+    public   void endGame(byte winner){
+        showEndGameDialog(winner);
+        User user = getUserSharedPreference();
+        if(user != null){
+            GameResult gameResult = new GameResult(user.getId(), player1Name, player2Name, winner);
+            gameAPI.SaveGame(gameResult);
+        }
+
     }
 
     private  void handleClicks(){
@@ -80,4 +95,5 @@ public class CheckersGameActivity extends AppCompatActivity implements View.OnCl
         }
         return  winnerName;
     }
+
 }

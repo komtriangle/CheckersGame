@@ -1,11 +1,5 @@
 package com.example.checkers.Activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -13,31 +7,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.example.checkers.API.Auth;
+import com.example.checkers.API.AuthAPI;
 import com.example.checkers.Activities.Interfaces.IAuthActivity;
 import com.example.checkers.ActivitiesRouter;
 import com.example.checkers.Models.User;
 import com.example.checkers.R;
-import com.squareup.moshi.Moshi;
 
-import java.io.IOException;
+public class LoginActivity extends ActivityBase  implements View.OnClickListener, IAuthActivity {
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-
-public class LoginActivity extends AppCompatActivity  implements View.OnClickListener, IAuthActivity {
-
-    private Auth auth;
+    private AuthAPI auth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        auth = new Auth("http://213.178.155.140:4200", this);
+        auth = new AuthAPI("http://213.178.155.140:4200", this);
         handleClicks();
     }
 
@@ -113,19 +96,6 @@ public class LoginActivity extends AppCompatActivity  implements View.OnClickLis
         skipAuth.setOnClickListener(this);
      }
 
-    private  void setUserToSharedPreference(User user){
-        SharedPreferences.Editor userShapeEditor = getUserSharedEditor();
-        userShapeEditor.putString("USER_NAME", user.getUserName());
-        userShapeEditor.putInt("ID", user.getId());
-        userShapeEditor.apply();
-    }
 
-
-    private SharedPreferences.Editor getUserSharedEditor(){
-        String preferenceName = "USER_PREFERENCE";
-        SharedPreferences userSharedPreferences = getSharedPreferences(preferenceName, Context.MODE_PRIVATE);
-        SharedPreferences.Editor userShapeEditor = userSharedPreferences.edit();
-        return  userShapeEditor;
-    }
 
 }

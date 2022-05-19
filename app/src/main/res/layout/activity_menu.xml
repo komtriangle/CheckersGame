@@ -22,12 +22,12 @@
         android:layout_height="55dp"
         android:layout_marginBottom="56dp"
         android:text="История игр"
-        app:layout_constraintBottom_toTopOf="@+id/logOut"
+        app:layout_constraintBottom_toTopOf="@+id/authButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/logOut"
+        android:id="@+id/authButton"
         android:layout_width="203dp"
         android:layout_height="68dp"
         android:layout_marginBottom="192dp"

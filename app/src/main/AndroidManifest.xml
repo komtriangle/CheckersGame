@@ -13,7 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Checkers"
         android:usesCleartextTraffic="true">
-
+        <activity
+            android:name=".Activities.GameHistoryActivity"
+            android:exported="false" />
         <activity
             android:name=".Activities.MenuActivity"
             android:exported="false" />

@@ -1,32 +1,27 @@
 package com.example.checkers.Activities;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.Intent;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.example.checkers.API.Auth;
+import com.example.checkers.API.AuthAPI;
 import com.example.checkers.Activities.Interfaces.IAuthActivity;
 import com.example.checkers.ActivitiesRouter;
 import com.example.checkers.Models.User;
 import com.example.checkers.R;
 
-public class RegisterActivity extends AppCompatActivity implements View.OnClickListener, IAuthActivity {
+public class RegisterActivity extends ActivityBase implements View.OnClickListener, IAuthActivity {
 
 
-    private Auth auth;
+    private AuthAPI auth;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        auth = new Auth("http://213.178.155.140:4200", this);
+        auth = new AuthAPI("http://213.178.155.140:4200", this);
         handleClicks();
     }
 
@@ -78,17 +73,17 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             });
         }
     }
-        private void   setIncorrectDataWarning(String warningMessage){
-            TextView incorrectDataWarning = (TextView) findViewById(R.id.incorrectRegDataWarn);
-            incorrectDataWarning.setText(warningMessage);
-            incorrectDataWarning.setTextColor(Color.RED);
-        }
+    private void   setIncorrectDataWarning(String warningMessage){
+        TextView incorrectDataWarning = (TextView) findViewById(R.id.incorrectRegDataWarn);
+        incorrectDataWarning.setText(warningMessage);
+        incorrectDataWarning.setTextColor(Color.RED);
+    }
 
-        private void   resetIncorrectDataWarning(){
-            TextView incorrectDataWarning = (TextView) findViewById(R.id.incorrectRegDataWarn);
-            incorrectDataWarning.setText("");
-            incorrectDataWarning.setBackgroundColor(Color.WHITE);
-        }
+    private void   resetIncorrectDataWarning(){
+        TextView incorrectDataWarning = (TextView) findViewById(R.id.incorrectRegDataWarn);
+        incorrectDataWarning.setText("");
+        incorrectDataWarning.setBackgroundColor(Color.WHITE);
+    }
 
 
 
