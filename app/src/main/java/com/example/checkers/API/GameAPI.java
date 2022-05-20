@@ -1,12 +1,9 @@
 package com.example.checkers.API;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.checkers.Activities.GameHistoryActivity;
 import com.example.checkers.Activities.Interfaces.IGameHistoryActivity;
 import com.example.checkers.Models.GameResult;
-import com.example.checkers.Models.User;
 import com.squareup.moshi.JsonAdapter;
 import com.squareup.moshi.JsonReader;
 import com.squareup.moshi.Types;

@@ -7,13 +7,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.checkers.API.AuthAPI;
 import com.example.checkers.Activities.Interfaces.IAuthActivity;
 import com.example.checkers.ActivitiesRouter;
-import com.example.checkers.Models.User;
 import com.example.checkers.R;
+import com.example.checkers.Sugar.Entities.User;
 
-public class RegisterActivity extends ActivityBase implements View.OnClickListener, IAuthActivity {
+public class RegisterActivity extends AppCompatActivity implements View.OnClickListener, IAuthActivity {
 
 
     private AuthAPI auth;
@@ -52,7 +54,7 @@ public class RegisterActivity extends ActivityBase implements View.OnClickListen
             return;
         }
         if(password.length() <6){
-            String warningMessage = "Пароль должен  содержать не меньше 3-х символов";
+            String warningMessage = "Пароль должен  содержать не меньше 6-х символов";
             setIncorrectDataWarning(warningMessage);
             return;
         }
@@ -61,8 +63,9 @@ public class RegisterActivity extends ActivityBase implements View.OnClickListen
     }
 
     public void handleResultCallBack(User user) {
-        if (user.getId() != -1) {
+        if (user.Id()!= -1) {
             ActivitiesRouter.moveToMenu(this);
+            user.save();
         } else {
             runOnUiThread(new Runnable() {
                 @Override

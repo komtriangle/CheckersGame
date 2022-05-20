@@ -2,27 +2,23 @@ package com.example.checkers.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 
-import com.example.checkers.Activities.CheckersGameActivity;
-import com.example.checkers.Activities.LoginActivity;
 import com.example.checkers.ActivitiesRouter;
-import com.example.checkers.GameView;
-import com.example.checkers.Models.User;
+import com.example.checkers.Sugar.Entities.User;
+import com.orm.SugarContext;
 
-public class MainActivity extends ActivityBase  {
+public class MainActivity extends AppCompatActivity  {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SugarContext.init(this);
         chooseActivity();
     }
 
     private  void chooseActivity(){
-        User user = getUserSharedPreference();
+        User user = User.first(User.class);
         if(user == null){
             ActivitiesRouter.moveToLogin(this);
         }

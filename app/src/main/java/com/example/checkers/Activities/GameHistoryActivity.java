@@ -1,21 +1,21 @@
 package com.example.checkers.Activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.checkers.API.GameAPI;
 import com.example.checkers.Activities.Interfaces.IGameHistoryActivity;
 import com.example.checkers.ActivitiesRouter;
 import com.example.checkers.Models.GameResult;
-import com.example.checkers.Models.User;
 import com.example.checkers.R;
+import com.example.checkers.Sugar.Entities.User;
 
 import java.util.ArrayList;
 
-public class GameHistoryActivity extends ActivityBase implements IGameHistoryActivity {
+public class GameHistoryActivity extends AppCompatActivity implements IGameHistoryActivity {
 
     private GameAPI gameAPI;
     @Override
@@ -53,9 +53,9 @@ public class GameHistoryActivity extends ActivityBase implements IGameHistoryAct
     }
 
     private  void getHistory(){
-        User user = getUserSharedPreference();
+        User user = User.first(User.class);
         if(user != null){
-            gameAPI.getGameHistory(user.getId());
+            gameAPI.getGameHistory(user.Id());
         }
         else{
             ActivitiesRouter.moveToMenu(this);

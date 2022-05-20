@@ -3,7 +3,7 @@ package com.example.checkers.API;
 import androidx.annotation.NonNull;
 
 import com.example.checkers.Activities.Interfaces.IAuthActivity;
-import com.example.checkers.Models.User;
+import com.example.checkers.Sugar.Entities.User;
 import com.squareup.moshi.JsonAdapter;
 
 import java.io.IOException;
@@ -26,7 +26,7 @@ public class AuthAPI extends  ApiBase {
         String postBody = createBoby(userName, password);
 
         Request request = createPostRequest("/Users/LogIn", postBody);
-        JsonAdapter<User> userJsonAdapter = moshi.adapter(User.class);
+        JsonAdapter<UserEntity> userJsonAdapter = moshi.adapter(UserEntity.class);
 
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -37,7 +37,8 @@ public class AuthAPI extends  ApiBase {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if(response.isSuccessful()){
-                    User user = userJsonAdapter.fromJson(response.body().source());
+                    UserEntity userEntity = userJsonAdapter.fromJson(response.body().source());
+                    User user = new User(userEntity.getId(), userEntity.getUserName());
                     activity.handleResultCallBack(user);
                 }
                 else{
@@ -51,7 +52,7 @@ public class AuthAPI extends  ApiBase {
         String postBody = createBoby(userName, password);
         Request request = createPostRequest("/Users/Register", postBody);
 
-        JsonAdapter<User> userJsonAdapter = moshi.adapter(User.class);
+        JsonAdapter<UserEntity> userJsonAdapter = moshi.adapter(UserEntity.class);
 
         client.newCall(request).enqueue(new Callback() {
             @Override
@@ -62,7 +63,8 @@ public class AuthAPI extends  ApiBase {
             @Override
             public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
                 if(response.isSuccessful()){
-                    User user = userJsonAdapter.fromJson(response.body().source());
+                    UserEntity userEntity = userJsonAdapter.fromJson(response.body().source());
+                    User user = new User(userEntity.getId(), userEntity.getUserName());
                     activity.handleResultCallBack(user);
                 }
                 else{

@@ -1,6 +1,7 @@
 package com.example.checkers.Activities;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -10,18 +11,18 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.checkers.ActivitiesRouter;
-import com.example.checkers.Models.User;
 import com.example.checkers.R;
+import com.example.checkers.Sugar.Entities.User;
 
-public class MenuActivity extends ActivityBase  implements View.OnClickListener{
+public class MenuActivity extends AppCompatActivity implements View.OnClickListener{
 
-    private  User user;
+    private User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
         handleClicks();
-        user = getUserSharedPreference();
+        user = User.first(User.class);
         prepareAuthButton();
     }
 
@@ -54,7 +55,7 @@ public class MenuActivity extends ActivityBase  implements View.OnClickListener{
 
     private  void ToAuth(){
         if(user != null){
-            resetUserInSharedPreference();
+            user.delete();
         }
         ActivitiesRouter.moveToLogin(this);
     }

@@ -7,17 +7,16 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.example.checkers.API.GameAPI;
 import com.example.checkers.ActivitiesRouter;
 import com.example.checkers.Dialogs.EndGameDialog;
 import com.example.checkers.GameView;
 import com.example.checkers.Models.GameResult;
-import com.example.checkers.Models.User;
 import com.example.checkers.R;
+import com.example.checkers.Sugar.Entities.User;
 
-public class CheckersGameActivity extends ActivityBase implements View.OnClickListener{
+public class CheckersGameActivity extends AppCompatActivity implements View.OnClickListener{
 
     private  String player1Name;
     private  String player2Name;
@@ -52,9 +51,9 @@ public class CheckersGameActivity extends ActivityBase implements View.OnClickLi
 
     public   void endGame(byte winner){
         showEndGameDialog(winner);
-        User user = getUserSharedPreference();
+        User user = User.first(User.class);
         if(user != null){
-            GameResult gameResult = new GameResult(user.getId(), player1Name, player2Name, winner);
+            GameResult gameResult = new GameResult(user.Id(), player1Name, player2Name, winner);
             gameAPI.SaveGame(gameResult);
         }
 

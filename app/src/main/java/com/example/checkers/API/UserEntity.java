@@ -1,14 +1,12 @@
-package com.example.checkers.Models;
+package com.example.checkers.API;
 
-import com.squareup.moshi.Json;
-import com.squareup.moshi.JsonClass;
 
-public class User {
+public class UserEntity {
 
     private int id;
     private    String userName;
 
-    public User(int id, String userName) {
+    public UserEntity(int id, String userName) {
         this.id = id;
         this.userName = userName;
     }

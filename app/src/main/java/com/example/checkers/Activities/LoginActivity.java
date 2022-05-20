@@ -7,13 +7,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.checkers.API.AuthAPI;
 import com.example.checkers.Activities.Interfaces.IAuthActivity;
 import com.example.checkers.ActivitiesRouter;
-import com.example.checkers.Models.User;
 import com.example.checkers.R;
+import com.example.checkers.Sugar.Entities.User;
+import com.orm.SugarContext;
 
-public class LoginActivity extends ActivityBase  implements View.OnClickListener, IAuthActivity {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener, IAuthActivity {
 
     private AuthAPI auth;
     @Override
@@ -22,6 +25,7 @@ public class LoginActivity extends ActivityBase  implements View.OnClickListener
         setContentView(R.layout.activity_login);
         auth = new AuthAPI("http://213.178.155.140:4200", this);
         handleClicks();
+
     }
 
     @Override
@@ -55,8 +59,8 @@ public class LoginActivity extends ActivityBase  implements View.OnClickListener
     }
 
     public void handleResultCallBack(User user){
-        if(user.getId() != -1){
-            setUserToSharedPreference(user);
+        if(user.Id() != -1){
+            user.save();
             ActivitiesRouter.moveToMenu(this);
         }
         else{
