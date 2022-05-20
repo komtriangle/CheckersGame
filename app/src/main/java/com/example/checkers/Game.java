@@ -305,7 +305,7 @@ public class Game {
     }
 
     public  boolean IsGameEnded(){
-        return  firstPlayersCheckers.size() == 11 || secondPlayerCheckers.size() == 11;
+        return  firstPlayersCheckers.size() == 0 || secondPlayerCheckers.size() == 0;
     }
 
     public  byte getWinner(){

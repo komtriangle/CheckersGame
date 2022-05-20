@@ -4,7 +4,7 @@ import com.orm.SugarRecord;
 
 public class User  extends SugarRecord {
 
-    private  int id;
+    private  int idInDb;
     private  String userName;
 
     public  User(){
@@ -12,11 +12,11 @@ public class User  extends SugarRecord {
     }
 
     public  User(int id, String userName){
-        this.id = id;
+        this.idInDb = id;
         this.userName = userName;
     }
 
     public int Id() {
-        return id;
+        return idInDb;
     }
 }
